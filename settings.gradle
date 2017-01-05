@@ -1,0 +1,1 @@
+include ':app', ':unishare_sdk'

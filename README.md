@@ -26,7 +26,7 @@
 	如果通过Android Studio拷贝，则会自动修改类的package，如果是通过系统的文件复制，则需要手动处理下wxapi和yxapi两个目录下四个类文件的package。
 
 4. 替换appid
-	
+	在cnx.cclink.unishare.platform下有若干个类，每个类对应一个平台的分享功能，每个类中都有一个appid的常量，需要将其替换为应用的appid。
 
 5. 完成分享功能
 	分享的功能都封装在ShareApi类中。

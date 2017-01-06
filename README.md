@@ -34,4 +34,3 @@ isPlatformInstalled(): 判断要分享的目标平台是否已经安装
 share()：分享
 
 
- 

@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
 import cnx.cclink.unishare.platform.QQShareActivity;
 import cnx.cclink.unishare.platform.ShortMessageShareApi;
 import cnx.cclink.unishare.platform.SystemShareApi;
-import cnx.cclink.unishare.platform.WBShareActivity;
+import cnx.cclink.unishare.platform.WeiBoShareActivity;
 import cnx.cclink.unishare.platform.WeixinShareApi;
 import cnx.cclink.unishare.platform.YixinShareApi;
 
@@ -29,7 +29,7 @@ public class ShareApi {
     public static boolean isPlatformInstalled(Activity activity, SharePlatform platform) {
         switch (platform) {
             case SINA_WEIBO:
-                return WBShareActivity.isAppInstalled(activity);
+                return WeiBoShareActivity.isAppInstalled(activity);
             case QQ:
             case QZONE:
                 return QQShareActivity.isAppInstalled(activity);
@@ -121,7 +121,7 @@ public class ShareApi {
 
     // 分享到新浪微博
     private static void shareToSina(Activity activity, String title, String detail, String imageFile, String shareURL) {
-        Intent intent = new Intent(activity, WBShareActivity.class);
+        Intent intent = new Intent(activity, WeiBoShareActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("detail", detail);
         intent.putExtra("imageFile", imageFile);

@@ -33,7 +33,7 @@ import cnx.cclink.unishare.ShareHelper;
  * 分享完成后，回调的时候需要原先的Activity实现IWeiboHandler.Respons接口，为了避免每个分享的activity都要这样做一遍，
  * 这里封装一个透明的activity，用来作为调用分享api的activity
  */
-public class WBShareActivity extends AppCompatActivity implements IWeiboHandler.Response {
+public class WeiBoShareActivity extends AppCompatActivity implements IWeiboHandler.Response {
     // 新浪微博的APP ID
     private static final String WEIBO_APP_KEY = "0000000000000000000000";
 

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import java.lang.ref.WeakReference;
+
 import cnx.cclink.unishare.platform.QQShareActivity;
 import cnx.cclink.unishare.platform.WBShareActivity;
 import cnx.cclink.unishare.platform.WeixinShareApi;
@@ -15,7 +17,7 @@ import cnx.cclink.unishare.platform.YixinShareApi;
  */
 public class ShareApi {
     // 成员变量
-    private static ShareListener mListener;     // 分享完成后的回调，它是static的，只能保存最近一次调用share接口的回调对象
+    private static WeakReference<ShareListener> mListener;     // 分享完成后的回调，它是static的，只能保存最近一次调用share接口的回调对象
 
     public ShareApi() {
 
@@ -42,7 +44,10 @@ public class ShareApi {
     // 当收到回调消息，表示分享被取消时调用
     public static void shareCanceled() {
         if (mListener != null) {
-            mListener.onCancel();
+            ShareListener listener = mListener.get();
+            if (listener != null) {
+                listener.onCancel();
+            }
             mListener = null;
         }
     }
@@ -50,7 +55,10 @@ public class ShareApi {
     // 当收到回调消息，表示分享完成时调用
     public static void shareComplete() {
         if (mListener != null) {
-            mListener.onComplete();
+            ShareListener listener = mListener.get();
+            if (listener != null) {
+                listener.onComplete();
+            }
             mListener = null;
         }
     }
@@ -58,7 +66,10 @@ public class ShareApi {
     // 当收到回调消息，表示分享失败时调用
     public static void shareError(ShareError error) {
         if (mListener != null) {
-            mListener.onError(error);
+            ShareListener listener = mListener.get();
+            if (listener != null) {
+                listener.onError(error);
+            }
             mListener = null;
         }
     }
@@ -70,7 +81,7 @@ public class ShareApi {
             return;
         }
 
-        mListener = listener;
+        mListener = new WeakReference<>(listener);
 
         switch (platform) {
             case SINA_WEIBO:

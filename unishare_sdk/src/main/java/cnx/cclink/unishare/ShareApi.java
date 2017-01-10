@@ -7,6 +7,8 @@ import android.content.Intent;
 import java.lang.ref.WeakReference;
 
 import cnx.cclink.unishare.platform.QQShareActivity;
+import cnx.cclink.unishare.platform.ShortMessageShareApi;
+import cnx.cclink.unishare.platform.SystemShareApi;
 import cnx.cclink.unishare.platform.WBShareActivity;
 import cnx.cclink.unishare.platform.WeixinShareApi;
 import cnx.cclink.unishare.platform.YixinShareApi;
@@ -37,6 +39,9 @@ public class ShareApi {
             case YIXIN:
             case YIXIN_TIMELINE:
                 return YixinShareApi.isAppInstalled(activity);
+            case SHORT_MESSAGE:
+            case SYSTEM_SHARE:
+                return true;
         }
         return false;
     }
@@ -105,6 +110,12 @@ public class ShareApi {
             case YIXIN_TIMELINE:
                 shareToYixin(activity, content.shareTitle, content.shareDetail, content.shareImage, content.shareUrl, true);
                 break;
+            case SHORT_MESSAGE:
+                shareToShortMessage(activity, content.shareTitle, content.shareDetail, content.shareImage, content.shareUrl);
+                break;
+            case SYSTEM_SHARE:
+                shareToSystemShare(activity, content.shareTitle, content.shareDetail, content.shareImage, content.shareUrl);
+                break;
         }
     }
 
@@ -137,5 +148,15 @@ public class ShareApi {
     // 分享到易信
     private static void shareToYixin(Context context, String title, String detail, String imageFile, String shareURL, boolean isTimeline) {
         YixinShareApi.share(context, title, detail, imageFile, shareURL, isTimeline);
+    }
+
+    // 分享到短信
+    private static void shareToShortMessage(Context context, String title, String detail, String imageFile, String shareURL) {
+        ShortMessageShareApi.share(context, title, detail, imageFile, shareURL);
+    }
+
+    // 分享到系统分享
+    private static void shareToSystemShare(Context context, String title, String detail, String imageFile, String shareURL) {
+        SystemShareApi.share(context, title, detail, imageFile, shareURL);
     }
 }

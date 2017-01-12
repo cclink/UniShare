@@ -6,7 +6,7 @@ package cnx.cclink.unishare;
  */
 
 public enum ShareResult {
-    SHARE_COMPLETE = 0,     // 分享成功
-    SHARE_CANCELLED,        // 分享取消
-    SHARE_FAILED            // 分享失败
+    SHARE_COMPLETE,          // 分享成功
+    SHARE_CANCELLED,         // 分享取消
+    SHARE_FAILED,            // 分享失败
 }

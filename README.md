@@ -22,10 +22,11 @@ dependencies {
 
 ### 2. AndroidManifest配置
 在app的AndroidManifest中添加如下权限，如果某个权限已经有了，则不用重复添加。这些权限大部分app都会用到，所以一般来说，不需要再额外添加了。
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+- \<uses-permission android:name="android.permission.INTERNET" />
+- \<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+- \<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+- \<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 ### 3. 处理微信和易信的回调activity
 微信和易信要求分享完成后的回调activity必须是当前app包名下固定名字的类，这里需要将wxapi和yxapi两个目录拷贝到应用包名所在的目标。

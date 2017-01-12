@@ -7,14 +7,13 @@ import java.io.ByteArrayOutputStream;
 
 
 /**
- * Help create share Image.
+ * 分享相关的辅助类
  */
 public class ShareHelper {
-    private static final String TAG = "ShareHelper";
 
     private static final int THUMB_SIZE_MAX = 150;
 
-    public static Bitmap getBitmapFromFile(String imageFile) {
+    public static Bitmap getThumbBitmapFromFile(String imageFile) {
         Bitmap bmp = BitmapFactory.decodeFile(imageFile);
         float scale = (float) THUMB_SIZE_MAX / Math.max(bmp.getWidth(), bmp.getHeight());
         int thumbWidth = (int) (scale * bmp.getWidth());

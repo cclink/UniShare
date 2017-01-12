@@ -81,7 +81,7 @@ public class WeiBoShareActivity extends AppCompatActivity implements IWeiboHandl
 
     private void share() {
         Bitmap bm = BitmapFactory.decodeFile(mShareImage);
-        Bitmap thumbBm = ShareHelper.getBitmapFromFile(mShareImage);
+        Bitmap thumbBm = ShareHelper.getThumbBitmapFromFile(mShareImage);
 
         // 要分享的文本内容
         TextObject textObject = new TextObject();

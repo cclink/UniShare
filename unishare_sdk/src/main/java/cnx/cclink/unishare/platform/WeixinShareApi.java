@@ -47,7 +47,7 @@ public class WeixinShareApi {
         msg.description = detail;
         req.transaction = String.valueOf(System.currentTimeMillis());
 
-        Bitmap bmp = ShareHelper.getBitmapFromFile(imageFile);
+        Bitmap bmp = ShareHelper.getThumbBitmapFromFile(imageFile);
         msg.thumbData = ShareHelper.bmpToByteArray(bmp);
         req.message = msg;
         req.scene = isTimeline ? SendMessageToWX.Req.WXSceneTimeline : SendMessageToWX.Req.WXSceneSession;

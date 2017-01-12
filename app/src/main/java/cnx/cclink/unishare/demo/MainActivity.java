@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import cnx.cclink.unishare.ShareApi;
-import cnx.cclink.unishare.ShareContent;
+import cnx.cclink.unishare.content.BaseShareContent;
 import cnx.cclink.unishare.ShareError;
 import cnx.cclink.unishare.ShareListener;
 import cnx.cclink.unishare.SharePlatform;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShareApi.share(MainActivity.this, SharePlatform.SYSTEM_SHARE, new ShareContent("标题", "内容", mFile.getAbsolutePath(), "https://github.com/cclink"), new ShareListener() {
+                ShareApi.share(MainActivity.this, SharePlatform.SYSTEM_SHARE, new BaseShareContent("标题", "内容", mFile.getAbsolutePath(), "https://github.com/cclink"), new ShareListener() {
                     @Override
                     public void onComplete() {
 

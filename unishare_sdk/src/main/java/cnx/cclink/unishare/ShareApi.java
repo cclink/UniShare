@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import java.lang.ref.WeakReference;
 
+import cnx.cclink.unishare.content.BaseShareContent;
 import cnx.cclink.unishare.platform.QQShareActivity;
 import cnx.cclink.unishare.platform.ShortMessageShareApi;
 import cnx.cclink.unishare.platform.SystemShareApi;
@@ -80,7 +81,7 @@ public class ShareApi {
     }
 
     // 分享
-    public static void share(Activity activity, SharePlatform platform, ShareContent content, ShareListener listener) {
+    public static void share(Activity activity, SharePlatform platform, BaseShareContent content, ShareListener listener) {
         // 没有分享内容，返回
         if (content == null) {
             return;

@@ -5,8 +5,8 @@ package cnx.cclink.unishare;
  * 分享结果
  */
 
-public interface ShareResult {
-    int SHARE_COMPLETE = 0;     // 分享成功
-    int SHARE_CANCELLED = 1;    // 分享取消
-    int SHARE_FAILED = 2;       // 分享失败
+public enum ShareResult {
+    SHARE_COMPLETE = 0,     // 分享成功
+    SHARE_CANCELLED,        // 分享取消
+    SHARE_FAILED            // 分享失败
 }

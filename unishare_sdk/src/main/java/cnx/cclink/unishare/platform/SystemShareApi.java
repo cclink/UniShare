@@ -6,6 +6,8 @@ import android.net.Uri;
 
 import java.io.File;
 
+import cnx.cclink.unishare.ShareHelper;
+
 /**
  * Created by zjn0645 on 2017/1/10.
  * Android系统分享
@@ -29,10 +31,7 @@ public class SystemShareApi {
         }
 
         // 添加文本内容
-        String text = "";
-        text = addString(text, title);
-        text = addString(text, detail);
-        text = addString(text, shareURL);
+        String text = ShareHelper.mergeString(title, detail, shareURL);
         if (!text.isEmpty()) {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             // 有些Android系统有个bug，
@@ -52,17 +51,5 @@ public class SystemShareApi {
         }
 
         context.startActivity(Intent.createChooser(intent, "分享到"));
-    }
-
-    private static String addString(String srcString, String toBeAddedString) {
-        if (srcString == null) {
-            return null;
-        } else {
-            if (toBeAddedString == null) {
-                return srcString;
-            } else {
-                return srcString + " " + toBeAddedString;
-            }
-        }
     }
 }

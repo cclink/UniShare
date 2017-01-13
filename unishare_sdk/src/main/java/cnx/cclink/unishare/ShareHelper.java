@@ -32,4 +32,14 @@ public class ShareHelper {
         }
         return result;
     }
+
+    public static String mergeString(String... strings) {
+        StringBuilder builder = new StringBuilder();
+        for (String string: strings) {
+            if (string != null && !string.isEmpty()) {
+                   builder.append(string);
+            }
+        }
+        return builder.toString();
+    }
 }

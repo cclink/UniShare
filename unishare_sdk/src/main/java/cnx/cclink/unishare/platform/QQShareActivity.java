@@ -1,14 +1,17 @@
 package cnx.cclink.unishare.platform;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.tencent.connect.common.AssistActivity;
 import com.tencent.connect.share.QQShare;
 import com.tencent.connect.share.QzoneShare;
 import com.tencent.tauth.IUiListener;
@@ -16,13 +19,14 @@ import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cnx.cclink.unishare.R;
 import cnx.cclink.unishare.ShareApi;
 import cnx.cclink.unishare.ShareError;
 
 /**
- * Created by cclink on 2016/12/30.
+ * Created by zjn0645 on 2016/12/30.
  * QQ分享功能，调用QQ SDK相关的Api
  * 分享完成后，回调的时候需要原先的Activity通过onActivityResult，将相关信息传递到Tencent.onActivityResultData接口中，
  * 为了避免每个分享的activity都要这样做一遍，
@@ -30,10 +34,18 @@ import cnx.cclink.unishare.ShareError;
  */
 public class QQShareActivity extends AppCompatActivity {
     // QQ的APP ID
-    private static final String QQ_APP_ID = "0000000000000000000000";
+    private static final String QQ_APP_ID = "1104906138";
 
     private Tencent mTencent;
     private IUiListener mQQShareListener;
+
+    private String mShareTitle;
+    private String mShareDetail;
+    private String mShareImageFile;
+    private String mShareURL;
+    private boolean mIsTimeLine;
+    private boolean mIsQQStart;
+    private boolean mCancelAnyway;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,17 +54,89 @@ public class QQShareActivity extends AppCompatActivity {
 
         // 获取要分享的内容
         Intent intent = getIntent();
-        String shareTitle = intent.getStringExtra("title");
-        String shareDetail = intent.getStringExtra("detail");
-        String shareImageFile = intent.getStringExtra("imageFile");
-        String shareURL = intent.getStringExtra("shareURL");
-        boolean isTimeline = intent.getBooleanExtra("isTimeline", false);
-        shareToQQ(this, shareTitle, shareDetail, shareImageFile, shareURL, isTimeline);
+        mShareTitle = intent.getStringExtra("title");
+        mShareDetail = intent.getStringExtra("detail");
+        mShareImageFile = intent.getStringExtra("imageFile");
+        mShareURL = intent.getStringExtra("shareURL");
+        mIsTimeLine = intent.getBooleanExtra("isTimeline", false);
+        mIsQQStart = false;
+        mCancelAnyway = false;
+    }
+
+    @Override
+    protected void onStart() {
+        // 如果已经启动QQ分享，又再次回到onStart，说明分享过程应该已经结束了，这里等待1秒钟后判断是否已经finish，
+        // 如果已经finish，说明Activity收到了QQ的回调，不需要在执行操作了
+        // 如果没有，则需要手动将QQ的AssitActivity结束掉
+        if (mIsQQStart) {
+            getWindow().getDecorView().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        finishAssitActivity();
+                    }
+                }
+            }, 1000);
+            mIsQQStart = false;
+        }
+        super.onStart();
+    }
+
+    private void finishAssitActivity() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        // 在Android 21以下版本中ActivityManager.getRunningTasks()是可以使用的，
+        // 在21及以上版本中此api被标记为了deprecated，不过仍然可以获取部分信息。
+        // 在21以上版本中可以用21以下版本中ActivityManager.getAppTasks()这个新的api来获取，
+        // 但是在21-23版本中，这个api获取到的AppTask中没有得到activity信息
+        // 所以在21-23版本仍然用原先的ActivityManager.getRunningTasks() api
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            List<ActivityManager.RunningTaskInfo> appTasks = activityManager.getRunningTasks(10);
+            for (ActivityManager.RunningTaskInfo task : appTasks) {
+                if (task.topActivity.getClassName().equals("com.tencent.connect.common.AssistActivity")) {
+                    startAssitActivity();
+                    break;
+                }
+            }
+        } else {
+            List<ActivityManager.AppTask> appTasks = activityManager.getAppTasks();
+            for (ActivityManager.AppTask task : appTasks) {
+                if (task.getTaskInfo().topActivity.getClassName().equals("com.tencent.connect.common.AssistActivity")) {
+                    startAssitActivity();
+                    break;
+                }
+            }
+        }
+    }
+
+    // 由于AssistActivity仍然在当前Acitivity堆栈中，重新start该Activity会触发该Activity的onNewIntent方法
+    // 在onNewIntent中会把AssistActivity finish掉
+    // 事实上，AssistActivity正常返回时也是通过onNewIntent来实现的
+    private void startAssitActivity() {
+        Intent intent = new Intent(QQShareActivity.this, AssistActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        mCancelAnyway = true;
+    }
+
+    @Override
+    protected void onResume() {
+        if (!mIsQQStart) {
+            shareToQQ(this, mShareTitle, mShareDetail, mShareImageFile, mShareURL, mIsTimeLine);
+            mIsQQStart = true;
+        }
+        super.onResume();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (mTencent != null) {
-            Tencent.onActivityResultData(requestCode, resultCode, data, mQQShareListener);
+        if (mCancelAnyway) {
+            if (mQQShareListener != null) {
+                mQQShareListener.onCancel();
+            }
+            mCancelAnyway = false;
+        } else {
+            if (mTencent != null) {
+                Tencent.onActivityResultData(requestCode, resultCode, data, mQQShareListener);
+            }
         }
     }
 

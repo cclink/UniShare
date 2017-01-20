@@ -88,13 +88,18 @@ public class WeiBoShareActivity extends AppCompatActivity implements IWeiboHandl
         textObject.text = mShareDetail;
 
         // 要分享的图片内容
-        ImageObject imageObject = new ImageObject();
-        imageObject.setImageObject(bm);
+        ImageObject imageObject = null;
+        if (bm != null) {
+            imageObject = new ImageObject();
+            imageObject.setImageObject(bm);
+        }
 
         // 要分享的链接（设置WebpageObject时必须设置每个成员变量，不过最终显示的只有title）
         WebpageObject webpageObject = new WebpageObject();
         webpageObject.identify = Utility.generateGUID();
-        webpageObject.setThumbImage(thumbBm);
+        if (thumbBm != null) {
+            webpageObject.setThumbImage(thumbBm);
+        }
         webpageObject.title = mShareTitle;
         webpageObject.description = mShareDetail;
         webpageObject.actionUrl = mShareURL;
@@ -103,7 +108,9 @@ public class WeiBoShareActivity extends AppCompatActivity implements IWeiboHandl
         // 将要分享的所有内容封装到WeiboMultiMessage中
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
         weiboMessage.textObject = textObject;
-        weiboMessage.imageObject = imageObject;
+        if (imageObject != null) {
+            weiboMessage.imageObject = imageObject;
+        }
         weiboMessage.mediaObject = webpageObject;
 
         // 将要分享的内容封装到SendMultiMessageToWeiboRequest中

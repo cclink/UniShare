@@ -46,7 +46,9 @@ public class YixinShareApi {
         req.transaction = String.valueOf(System.currentTimeMillis());
 
         Bitmap bmp = ShareHelper.getThumbBitmapFromFile(imageFile);
-        msg.thumbData = BitmapUtil.bmpToByteArray(bmp, true);
+        if (bmp != null) {
+            msg.thumbData = BitmapUtil.bmpToByteArray(bmp, true);
+        }
         req.message = msg;
         req.scene = isTimeline ? SendMessageToYX.Req.YXSceneTimeline : SendMessageToYX.Req.YXSceneSession;
         return req;

@@ -14,11 +14,19 @@ public class ShareHelper {
     private static final int THUMB_SIZE_MAX = 150;
 
     public static Bitmap getThumbBitmapFromFile(String imageFile) {
-        Bitmap bmp = BitmapFactory.decodeFile(imageFile);
-        float scale = (float) THUMB_SIZE_MAX / Math.max(bmp.getWidth(), bmp.getHeight());
-        int thumbWidth = (int) (scale * bmp.getWidth());
-        int thumbHeight = (int) (scale * bmp.getHeight());
-        return Bitmap.createScaledBitmap(bmp, thumbWidth, thumbHeight, true);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            Bitmap bmp = BitmapFactory.decodeFile(imageFile);
+            if (bmp != null) {
+                float scale = (float) THUMB_SIZE_MAX / Math.max(bmp.getWidth(), bmp.getHeight());
+                int thumbWidth = (int) (scale * bmp.getWidth());
+                int thumbHeight = (int) (scale * bmp.getHeight());
+                return Bitmap.createScaledBitmap(bmp, thumbWidth, thumbHeight, true);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     public static byte[] bmpToByteArray(Bitmap bmp) {

@@ -19,14 +19,13 @@
 也就是在app的build.gradle的dependencies中添加compile project(':unishare_sdk')
 
 ### 2. AndroidManifest配置
-在app的AndroidManifest中添加如下权限，如果某个权限已经有了，则不用重复添加。前四项权限是各个SDK需要的权限，大部分app都会用到，所以一般来说，不需要再额外添加了。
-最后一个权限是为了解决QQ分享时部分情况下存在透明Activity的问题，参见最后一节“存在的问题”
+在app的AndroidManifest中添加如下权限，如果某个权限已经有了，则不用重复添加。
+这四项权限是各个SDK需要的权限，大部分app都会用到，所以一般来说，不需要再额外添加了。
 
 - \<uses-permission android:name="android.permission.INTERNET" />
 - \<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 - \<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 - \<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-- \<uses-permission android:name="android.permission.GET_TASKS" />
 
 ### 3. 处理微信和易信的回调activity
 微信和易信要求分享完成后的回调activity必须是当前app包名下固定名字的类，这里需要将wxapi和yxapi两个目录拷贝到应用包名所在的目标。
@@ -49,15 +48,7 @@ share()：分享
 
 1. QQ分享问题
 
-    当调用QQ分享的API后，如果QQ未登陆时会出现QQ的登陆界面，如果QQ已登陆，则会直接出现分享的目标选择界面。
-
-    对第一种情况，如果用户在进入QQ登陆界面后，没有正常登陆，而是直接取消，这时会有一个透明的Activity覆盖在调用分享api的Activity上，导致用户无法继续操作。这个Activity不会自动结束，只有按返回键将其结束掉后，才可以正常操作。
-
-    对第二种情况，如果用户在进入分享目标选择界面后，按下Home，返回到桌面，然后再回到我们的app中，这时分享目标选择界面会消失，同样会有一个透明的Activity覆盖在调用分享api的Activity上
-
-    这个问题是QQ APP中的一个bug。在QQ SDK中有一个com.tencent.connect.common.AssistActivity。正是这个Activity覆盖在调用分享api的Activity上。正常情况下AssistActivity会在onNewIntent的时候调用finish结束，但是对上述两种情况onNewIntent没有被触发，从而会一直覆盖在调用api的Activity之上。
-
-    这个问题已经在QQShareActivity中解决，但是需要在AndroidManifest.xml中增加GET_TASKS权限（用来判断AssistActivity是不是还在Activity栈中）。
+    先完成一次带有图片的内容分享，然后再分享其他内容，这时在QQ分享界面显示的缩略图仍然是上次分享时使用的图片，不过分享完成后在客户端的显示是正确的。
 
 2. 微信分享问题
 
@@ -68,5 +59,5 @@ share()：分享
 3. 易信分享问题
 
     易信分享时，如果在选择用户的界面直接返回，这时调用的app也是收不到任何回调的。
-    
+
     此外，和微信一样，如果停在选择用户的界面，然后按下Home键，再切回到app中，这时选择用户的界面会消失。但是同样收不到任何回调。
